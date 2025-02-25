@@ -1,17 +1,15 @@
 from Account import Account 
-
 accounts = []
 current_account = None 
 
 while True:
-
     # Get the user action
     action = input("What would you like to do? (create, select, withdraw, deposit, view, quit): ").lower()
 
     # Wish that switch cases were a thing in Python
     if action == "create":
         # Get the account parameters
-        id = int(input("Enter the ID: "))
+        id = input("Enter the ID: ")
         balance = int(input("Enter the initial balance: "))
 
         # Check if an account with that ID already exists
@@ -26,7 +24,7 @@ while True:
     # Change the current_account to the account with the given ID
     elif action == "select":
         # Get the account ID to select
-        id = int(input("Enter the ID: "))
+        id = input("Enter the ID: ")
 
         # Loop until account is found or end of list 
         for account in accounts:

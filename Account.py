@@ -1,3 +1,5 @@
+from math import inf
+
 class Account:
     def __init__(self, id:str, balance:float):
         self.id:str = id
@@ -7,15 +9,15 @@ class Account:
     def update_transactions(self, amount:float, description:str):
         self.list_of_transactions.append((description, amount))
     
-    def withdraw(self, amount:float, description:str):
-        if amount > self.balance or amount <= 0:
+    def withdraw(self, amount:float, description:str=""):
+        if (type(amount) not in [float, int]) or amount > self.balance or amount <= 0:
             raise ValueError("You cant withdraw that amount")
         else:
             self.balance -= amount
             self.update_transactions(amount, "(w) " + description)
 
-    def deposit(self, amount:float, description:str):
-        if amount <= 0:
+    def deposit(self, amount:float, description:str=""):
+        if (type(amount) not in [float, int]) or amount <= 0 or amount == inf:
             raise ValueError("You cant deposit that amount")
         else:
             self.balance += amount
