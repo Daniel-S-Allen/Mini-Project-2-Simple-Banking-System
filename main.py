@@ -11,7 +11,7 @@ while True:
         if id in [account.id for account in accounts]:
             print("Account with that ID already exists.")
             continue
-        accounts.append(Account(id=int(id)))
+        accounts.append(Account(id=int(id), balance=int(balance)))
     
     elif action == "withdraw":
         id = input("Enter the ID: ")
