@@ -4,19 +4,31 @@ accounts = []
 current_account = None 
 
 while True:
-    action = input("What would you like to do? (create, select, withdraw, deposit, view, quit): ")
 
+    # Get the user action
+    action = input("What would you like to do? (create, select, withdraw, deposit, view, quit): ").lower()
+
+    # Wish that switch cases were a thing in Python
     if action == "create":
+        # Get the account parameters
         id = int(input("Enter the ID: "))
         balance = int(input("Enter the initial balance: "))
+
+        # Check if an account with that ID already exists
         if id in [account.id for account in accounts]:
             print("Account with that ID already exists.")
             continue
+        
+        # Create the account and add it as the current account
         accounts.append(Account(id=id, balance=balance))
         current_account = accounts[-1]
     
+    # Change the current_account to the account with the given ID
     elif action == "select":
+        # Get the account ID to select
         id = int(input("Enter the ID: "))
+
+        # Loop until account is found or end of list 
         for account in accounts:
             if account.id == id:
                 current_account = account
@@ -24,9 +36,11 @@ while True:
         else:
             print("Error: Account with that ID does not exist.")
 
+    # check if an account is selected, all other actions require a selected account
     elif current_account is None:
         print("No account selected. Please create or select an account first.")
     
+    # Withdraw the given amount from the current account
     elif action == "withdraw":
         amount = input("Enter the amount to withdraw: ")
         try:
@@ -34,19 +48,22 @@ while True:
         except:
             print("Error: Invalid withdraw amount.")
         
-    
+    # Deposit the given amount to the current account
     elif action == "deposit":
         amount = input("Enter the amount to deposit: ")
         current_account.deposit(int(amount))
     
+    # Display the current account balance and transaction history
     elif action == "view":
         amount = input("Enter the amount to deposit: ")
         current_account.display(int(amount))
     
+    # Save all accounts and exit the program
     elif action == "quit":
         for account in accounts:
             account.save()
-        break
+        quit()
     
+    # Catch invalid input
     else:
         print("No such action. Try again.")
