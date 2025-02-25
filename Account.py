@@ -1,25 +1,25 @@
 class Account:
-    def __init__(self, id, balance):
-        self.id = id
-        self.list_of_transactions = {}
+    def __init__(self, id:str, balance:float):
+        self.id:str = id
+        self.list_of_transactions:list[tuple[str,float]] = {}
         self.balance = balance
     
-    def update_transection(self, desc, amm):
-        self.list_of_transactions.update({desc : amm})
+    def update_transection(self, amount:float, description:str):
+        self.list_of_transactions.update({description : amount})
     
-    def withdraw(self, with_am, desc):
-        if with_am > self.balance:
+    def withdraw(self, amount:float, description:str):
+        if amount > self.balance:
             raise ValueError("You dont have enough balance to withdraw that ammount")
         else:
-            self.balance -= with_am
-            self.update_transection(desc, -with_am)
+            self.balance -= amount
+            self.update_transection(amount, description)
 
-    def deposit(self, dep_am, desc):
-        if dep_am < 0:
+    def deposit(self, amount:float, description:str):
+        if amount < 0:
             raise ValueError("You dont have enough balance to deposit that ammount")
         else:
-            self.balance += dep_am
-            self.update_transection(desc, dep_am)
+            self.balance += amount
+            self.update_transection(amount, description)
     
     def display(self):
         # Get the maximum length of the strings to format the output
