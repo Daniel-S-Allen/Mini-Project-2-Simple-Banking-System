@@ -45,15 +45,15 @@ while True:
         amount = input("Enter the amount to withdraw: ")
         description = input("Enter the description: ")
         try:
-            current_account.withdraw(with_am=int(amount), desc=description)
-        except:
+            current_account.withdraw(amount=int(amount), description=description)
+        except ValueError:
             print("Error: Invalid withdraw amount.")
         
     # Deposit the given amount to the current account
     elif action == "deposit":
         amount = input("Enter the amount to deposit: ")
         description = input("Enter the description: ")
-        current_account.deposit(dep_am=int(amount), desc=description)
+        current_account.deposit(amount=int(amount), description=description)
     
     # Display the current account balance and transaction history
     elif action == "view":
@@ -65,6 +65,8 @@ while True:
             account.save()
         quit()
     
+
     # Catch invalid input
     else:
         print("No such action. Try again.")
+    
