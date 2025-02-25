@@ -20,3 +20,21 @@ class bank:
         else:
             self.balance += dep_am
             bank.update_transection(desc, dep_am)
+    
+    def display(self):
+        # Get the maximum length of the strings to format the output
+        length = max(len(f"Account Balance: {self.balance}"), f"Id: {self.id}", "Transaction History", [f"{transaction['description']}: {transaction['amount']}" for transaction in self.transactions.items()])
+        
+        # Print the output with the correct formatting
+        print("-" * length)
+        print("Account Details")
+        print("-" * length)
+        print(f"Account Balance: {self.balance}")
+        print(f"Id: {self.id}")
+        print()
+        print("-" * length)
+        print("Transaction History")
+        print("-" * length)
+        for transaction in self.transactions:
+            print(f"{transaction['description']}: {transaction['amount']}")
+        print("-" * length)
