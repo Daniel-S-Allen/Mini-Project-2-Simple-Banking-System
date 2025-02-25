@@ -28,6 +28,8 @@ def test_withdraw():
     assert(account.balance == 100-21.5)
     account.withdraw(pi)
     assert(account.balance == 100-(21.5+pi))
+    with pytest.raises(Exception):
+        account.withdraw(100)
     
     # test for malicious input
     with pytest.raises(ValueError):
@@ -37,5 +39,4 @@ def test_withdraw():
     with pytest.raises(ValueError):
         account.withdraw("test")
 
-test_deposit()
-test_withdraw()
+_ = pytest.main()
