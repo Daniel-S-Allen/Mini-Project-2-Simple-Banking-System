@@ -8,9 +8,25 @@ class Account:
         self.balance:float = balance
     
     def update_transactions(self, amount:float, description:str):
+        """Append a new transaction to this account
+
+        Args:
+            amount (float): The amount of money transferred
+            description (str): The description of the transaction
+        """
         self.list_of_transactions.append((description, amount))
     
     def withdraw(self, amount:float, description:str=""):
+        """Withdraw money from this account
+
+        Args:
+            amount (float): Amount of money to withdraw
+            description (str, optional): Description of transaction
+
+        Raises:
+            TypeError: If amount is not a number
+            ValueError: If amount is negative or is larger than available balance
+        """
         if type(amount) not in [float, int] or isnan(amount):
             raise TypeError("Amount must be a number")
         elif amount > self.balance:
@@ -22,6 +38,16 @@ class Account:
             self.update_transactions(amount, "(w) " + description)
 
     def deposit(self, amount:float, description:str=""):
+        """Deposit money to this account
+
+        Args:
+            amount (float): Amount of money to deposit
+            description (str, optional): Description of transaction
+
+        Raises:
+            TypeError: If amount is not a number
+            ValueError: If amount is negative or infinity
+        """
         if type(amount) not in [float, int] or isnan(amount):
             raise TypeError("Amount must be a number")
         elif amount == inf:
@@ -54,6 +80,14 @@ class Account:
         
     @override
     def __eq__(self, other:object):
+        """Compares this account to an object
+
+        Args:
+            other (object): An object
+
+        Returns:
+            bool: True if both objects are an Account and their IDs are the same, false otherwise
+        """
         if type(other) == type(self):
             return self.id == other.id
         return False
