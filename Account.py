@@ -1,24 +1,33 @@
-from math import inf
-
+from __future__ import annotations
+from math import inf, isnan
+from typing import override
 class Account:
     def __init__(self, id:str, balance:float):
         self.id:str = id
         self.list_of_transactions:list[tuple[str,float]] = []
-        self.balance = balance
+        self.balance:float = balance
     
     def update_transactions(self, amount:float, description:str):
         self.list_of_transactions.append((description, amount))
     
     def withdraw(self, amount:float, description:str=""):
-        if (type(amount) not in [float, int]) or amount > self.balance or amount <= 0:
-            raise ValueError("You cant withdraw that amount")
+        if type(amount) not in [float, int] or isnan(amount):
+            raise TypeError("Amount must be a number")
+        elif amount > self.balance:
+            raise ValueError("Can't withdraw more than available balance")
+        elif amount <= 0:
+            raise ValueError("Amount must be positive")
         else:
             self.balance -= amount
             self.update_transactions(amount, "(w) " + description)
 
     def deposit(self, amount:float, description:str=""):
-        if (type(amount) not in [float, int]) or amount <= 0 or amount == inf:
-            raise ValueError("You cant deposit that amount")
+        if type(amount) not in [float, int] or isnan(amount):
+            raise TypeError("Amount must be a number")
+        elif amount == inf:
+            raise ValueError("Can't deposit infinity")
+        elif amount <= 0:
+            raise ValueError("Amount must be positive")
         else:
             self.balance += amount
             self.update_transactions(amount, "(d) " + description)
@@ -42,3 +51,9 @@ class Account:
         for transaction in self.list_of_transactions:
             print(f"{transaction[0]}: {transaction[1]}")
         print("-" * length)
+        
+    @override
+    def __eq__(self, other:object):
+        if type(other) == type(self):
+            return self.id == other.id
+        return False
