@@ -1,5 +1,5 @@
 from Account import Account 
-accounts = []
+accounts:list[Account] = []
 current_account = None 
 
 while True:
@@ -61,7 +61,7 @@ while True:
     # Save all accounts and exit the program
     elif action == "quit":
         for account in accounts:
-            account.save()
+            raise NotImplementedError("Account saving has not been implemented!")#account.save()
         quit()
     
 
