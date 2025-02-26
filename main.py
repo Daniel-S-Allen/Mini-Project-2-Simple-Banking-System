@@ -7,6 +7,7 @@ while True:
     action = input("What would you like to do? (create, select, withdraw, deposit, view, quit): ").lower()
 
     # Wish that switch cases were a thing in Python
+    # they are https://www.geeksforgeeks.org/python-match-case-statement/
     if action == "create":
         # Get the account parameters
         id = input("Enter the ID: ")
