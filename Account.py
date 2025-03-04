@@ -1,13 +1,26 @@
 from __future__ import annotations
+import json
 from math import inf, isnan
 from typing import override
 from csv import writer
-
+import uuid
+class AccountSerializer(json.JSONEncoder):
+    @override
+    def default(self, o:Account):
+        result:dict[str,object] = {
+            'transactions': o._list_of_transactions, # pyright: ignore[reportPrivateUsage]
+            'balance': o.get_balance()
+        }
+        return result
 class Account:
-    def __init__(self, id:str, balance:float):
-        self.id:str = id
-        self.list_of_transactions:list[tuple[str,float]] = []
-        self.balance:float = balance
+    _list_of_transactions:list[tuple[str,float]] = []
+    _id:str
+    def __init__(self, id:str|None = None, balance:float = 0):
+        if type(id) is str:
+            self._id = id
+        else:
+            self._id = str(uuid.uuid4())
+        self._balance:float = balance
     
     def update_transactions(self, amount:float, description:str):
         """Append a new transaction to this account
@@ -16,7 +29,7 @@ class Account:
             amount (float): The amount of money transferred
             description (str): The description of the transaction
         """
-        self.list_of_transactions.append((description, amount))
+        self._list_of_transactions.append((description, amount))
     
     def withdraw(self, amount:float, description:str=""):
         """Withdraw money from this account
@@ -31,12 +44,12 @@ class Account:
         """
         if type(amount) not in [float, int] or isnan(amount):
             raise TypeError("Amount must be a number")
-        elif amount > self.balance:
+        elif amount > self._balance:
             raise ValueError("Can't withdraw more than available balance")
         elif amount <= 0:
             raise ValueError("Amount must be positive")
         else:
-            self.balance -= amount
+            self._balance -= amount
             self.update_transactions(amount, "(w) " + description)
 
     def deposit(self, amount:float, description:str=""):
@@ -57,35 +70,41 @@ class Account:
         elif amount <= 0:
             raise ValueError("Amount must be positive")
         else:
-            self.balance += amount
+            self._balance += amount
             self.update_transactions(amount, "(d) " + description)
+    
+    def get_balance(self):
+        return self._balance
     
     def save(self):
         with open('data.csv', 'a', newline='') as file:
             w = writer(file)
-            w.writerow([self.id, self.balance, self.list_of_transactions]) 
+            w.writerow([self._id, self._balance, self._list_of_transactions]) 
 
     
     def display(self):
         # Get the maximum length of the strings to format the output
-        length = max(len(f"Account Balance: {self.balance}"), len(f"Id: {self.id}"), len("Transaction History"), *[len(f"{transaction[0]}: {transaction[1]}") for transaction in self.list_of_transactions])
+        length = max(len(f"Account Balance: {self._balance}"), len(f"Id: {self._id}"), len("Transaction History"), *[len(f"{transaction[0]}: {transaction[1]}") for transaction in self._list_of_transactions])
     
         # Print the output with the correct formatting
         print("-" * length)
         print("Account Details")
         print("-" * length)
-        print(f"Account Balance: {self.balance}")
-        print(f"Id: {self.id}")
-        if len(self.list_of_transactions) == 0:
+        print(f"Account Balance: {self._balance}")
+        print(f"Id: {self._id}")
+        if len(self._list_of_transactions) == 0:
             print("No transactions yet.")
         print()
         print("-" * length)
         print("Transaction History")
         print("-" * length)
-        for transaction in self.list_of_transactions:
+        for transaction in self._list_of_transactions:
             print(f"{transaction[0]}: {transaction[1]}")
         print("-" * length)
         
+    def get_id(self):
+        return self._id    
+    
     @override
     def __eq__(self, other:object):
         """Compares this account to an object
@@ -97,5 +116,5 @@ class Account:
             bool: True if both objects are an Account and their IDs are the same, false otherwise
         """
         if type(other) == type(self):
-            return self.id == other.id
+            return self._id == other._id
         return False

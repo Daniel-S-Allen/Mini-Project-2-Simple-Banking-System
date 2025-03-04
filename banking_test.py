@@ -1,5 +1,6 @@
 from math import inf, nan, pi
 import Account 
+import Bank
 import pytest
 def test_deposit():
     account = Account.Account("Name1", 0)
@@ -7,13 +8,13 @@ def test_deposit():
     #### test for reasonable (non-failing) input ####
     # whole number
     account.deposit(10)
-    assert(account.balance == 10), "Should be 10"
+    assert(account.get_balance()  == 10), "Should be 10"
     # floating-point number
     account.deposit(11.5)
-    assert(account.balance == 21.5), "Should be 21.5"
+    assert(account.get_balance()  == 21.5), "Should be 21.5"
     # transcendental number
     account.deposit(pi)
-    assert(account.balance == (21.5+pi)), "Should be 24.64159265"
+    assert(account.get_balance()  == (21.5+pi)), "Should be 24.64159265"
 
     #### test for unreasonable (failing) input ####
     # test negative
@@ -35,13 +36,13 @@ def test_withdraw():
     #### test for reasonable (non-failing) input ####
     # whole number
     account.withdraw(10)
-    assert(account.balance == 100-10), "Should be 90"
+    assert(account.get_balance() == 100-10), "Should be 90"
     # floating-point number
     account.withdraw(11.5)
-    assert(account.balance == 100-21.5), "Should be 78.5"
+    assert(account.get_balance()  == 100-21.5), "Should be 78.5"
     # transcendental number
     account.withdraw(pi)
-    assert(account.balance == 100-21.5-pi), "Should be 75.35840735"
+    assert(account.get_balance()  == 100-21.5-pi), "Should be 75.35840735"
     
     #### test for unreasonable (failing) input ####
     # test above balance
@@ -61,7 +62,12 @@ def test_withdraw():
         account.withdraw("test") # pyright: ignore[reportArgumentType]
 
 def test_duplicate():
-    pass
-    
+    b = Bank.Bank("serialization_test.json")
+   # b.create_account("TestAccount")
+    b.create_account()
+    b.create_account()
+    print(b.getFilePath())
+    b.save()
 
-_ = pytest.main()
+test_duplicate()
+#_ = pytest.main()
