@@ -2,6 +2,8 @@ from Account import Account
 accounts:list[Account] = []
 current_account = None 
 
+
+
 while True:
     # Get the user action
     action = input("What would you like to do? (create, select, withdraw, deposit, view, quit): ").lower()
@@ -61,7 +63,7 @@ while True:
     # Save all accounts and exit the program
     elif action == "quit":
         for account in accounts:
-            raise NotImplementedError("Account saving has not been implemented!")#account.save()
+            account.save()
         quit()
     
 

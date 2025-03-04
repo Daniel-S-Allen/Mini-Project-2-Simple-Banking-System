@@ -1,6 +1,8 @@
 from __future__ import annotations
 from math import inf, isnan
 from typing import override
+from csv import writer
+
 class Account:
     def __init__(self, id:str, balance:float):
         self.id:str = id
@@ -57,6 +59,12 @@ class Account:
         else:
             self.balance += amount
             self.update_transactions(amount, "(d) " + description)
+    
+    def save(self):
+        with open('data.csv', 'a', newline='') as file:
+            w = writer(file)
+            w.writerow([self.id, self.balance, self.list_of_transactions]) 
+
     
     def display(self):
         # Get the maximum length of the strings to format the output
