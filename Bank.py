@@ -13,7 +13,7 @@ class Bank:
     def get_account_ids(self) -> list[str]:
         return list(self.accounts)    
     
-    def create_account(self, account_id:str|None = None) -> Account:
+    def create_account(self, account_id:str|None = None, account_balance:float = 0) -> Account:
         """Create a new account with the specified id
 
         Args:
@@ -25,7 +25,7 @@ class Bank:
         if account_id is not None:
             if self.accounts.get(account_id, None) is not None:
                 raise ValueError(f"Account with id {account_id} already exists!")
-        new_account = Account(account_id)
+        new_account = Account(account_id, account_balance)
         self.accounts[new_account.get_id()] = new_account
         return new_account
 
@@ -35,7 +35,9 @@ class Bank:
         self.accounts[account.get_id()] = account
     
     def get_account(self, id:str):
-        return self.accounts[id]
+        if self.accounts.get(id) is not None:
+            return self.accounts[id]
+        raise KeyError(f"No account found with the id \"{id}\"")
     
     @staticmethod
     def bank_from_file(filepath:str):
