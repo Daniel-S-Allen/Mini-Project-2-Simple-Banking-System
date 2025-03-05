@@ -1,21 +1,20 @@
 from __future__ import annotations
-import uuid
+import pickle
 from Account import Account
-import json
 import fcntl
 from os import path
 
 class Bank:
     accounts:dict[str, Account]
     
-    def __init__(self, id:str | None = None):
-        self.accounts = {}
+    def __init__(self, id:str | None = None, accounts:dict[str,Account]|None = None):
+        self.accounts = accounts if accounts is not None else {}
         
     def get_account_ids(self) -> list[str]:
         return list(self.accounts)    
     
     def create_account(self, account_id:str|None = None) -> Account:
-        """Create a new account with the specified id. If the ID is ``None``, generate a new random UUID.
+        """Create a new account with the specified id
 
         Args:
             account_id (str | None, optional): Name of the account.
@@ -51,9 +50,9 @@ class Bank:
         Returns:
             _type_: A new bank created from the deserialized data
         """
-        with open(filepath, "r") as file:
+        with open(filepath, "rb") as file:
             fcntl.flock(file.fileno(), fcntl.LOCK_EX)
-            bank:Bank = json.load(file)
+            bank:Bank = pickle.load(file)
             fcntl.flock(file.fileno(), fcntl.LOCK_UN)
             return bank
             
@@ -61,9 +60,9 @@ class Bank:
     def bank_to_file(bank:Bank, filepath:str, overwrite:bool = False):
         if path.exists(filepath) and overwrite == False:
             raise FileExistsError(f"File {filepath} already exists!")
-        with open(filepath, "w") as file:
+        with open(filepath, "wb") as file:
             fcntl.flock(file.fileno(), fcntl.LOCK_EX)
-            json.dump(bank, file, indent=1)
+            pickle.dump(bank,file)
             fcntl.flock(file.fileno(), fcntl.LOCK_UN)
 
     def save(self, filepath:str):

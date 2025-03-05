@@ -1,5 +1,4 @@
 from math import inf, nan, pi
-import os
 import random
 import Account 
 from Bank import Bank
@@ -74,12 +73,12 @@ def test_save_and_load():
     for _ in range(0, 10):
         account = bank.create_account()
         account.deposit(random.randint(500,1000))
-        account.deposit(random.randint(500,1000))
+        account.withdraw(random.randint(0,500))
 
-    bank.save("banking_test.json")
-    second_bank = Bank.bank_from_file("banking_test.json")
-   # assert(len(bank.accounts) == len(second_bank.accounts)) # pyright: ignore[reportPrivateUsage]
-    for account in bank.get_account_ids(): # pyright: ignore[reportPrivateUsage]
+    bank.save("banking_test.bank")
+    second_bank = Bank.bank_from_file("banking_test.bank")
+
+    for account in bank.get_account_ids():
         assert(bank.accounts[account] == second_bank.accounts[account])
             
 _ = pytest.main()
