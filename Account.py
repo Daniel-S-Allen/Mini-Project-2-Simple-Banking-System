@@ -1,17 +1,9 @@
 from __future__ import annotations
-import json
 from math import inf, isnan
 from typing import override
 from csv import writer
 import uuid
-class AccountSerializer(json.JSONEncoder):
-    @override
-    def default(self, o:Account):
-        result:dict[str,object] = {
-            'transactions': o._list_of_transactions, # pyright: ignore[reportPrivateUsage]
-            'balance': o.get_balance()
-        }
-        return result
+
 class Account:
     _list_of_transactions:list[tuple[str,float]] = []
     _id:str

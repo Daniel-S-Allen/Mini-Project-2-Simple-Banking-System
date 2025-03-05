@@ -1,6 +1,8 @@
 from math import inf, nan, pi
+import os
+import random
 import Account 
-import Bank
+from Bank import Bank
 import pytest
 def test_deposit():
     account = Account.Account("Name1", 0)
@@ -62,12 +64,22 @@ def test_withdraw():
         account.withdraw("test") # pyright: ignore[reportArgumentType]
 
 def test_duplicate():
-    b = Bank.Bank("serialization_test.json")
-   # b.create_account("TestAccount")
-    b.create_account()
-    b.create_account()
-    print(b.getFilePath())
-    b.save()
+    bank = Bank()
+    _ = bank.create_account("TestAccount")
+    with pytest.raises(ValueError):
+        _ = bank.create_account("TestAccount")
 
-test_duplicate()
-#_ = pytest.main()
+def test_save_and_load():
+    bank = Bank()
+    for _ in range(0, 10):
+        account = bank.create_account()
+        account.deposit(random.randint(500,1000))
+        account.deposit(random.randint(500,1000))
+
+    bank.save("banking_test.json")
+    second_bank = Bank.bank_from_file("banking_test.json")
+   # assert(len(bank.accounts) == len(second_bank.accounts)) # pyright: ignore[reportPrivateUsage]
+    for account in bank.get_account_ids(): # pyright: ignore[reportPrivateUsage]
+        assert(bank.accounts[account] == second_bank.accounts[account])
+            
+_ = pytest.main()
