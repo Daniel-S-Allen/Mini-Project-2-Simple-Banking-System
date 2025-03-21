@@ -1,7 +1,6 @@
 from __future__ import annotations
 import pickle
 from Account import Account
-import fcntl
 from os import path
 
 class Bank:
@@ -53,9 +52,7 @@ class Bank:
             _type_: A new bank created from the deserialized data
         """
         with open(filepath, "rb") as file:
-            fcntl.flock(file.fileno(), fcntl.LOCK_EX)
             bank:Bank = pickle.load(file)
-            fcntl.flock(file.fileno(), fcntl.LOCK_UN)
             return bank
             
     @staticmethod
@@ -63,9 +60,7 @@ class Bank:
         if path.exists(filepath) and overwrite == False:
             raise FileExistsError(f"File {filepath} already exists!")
         with open(filepath, "wb") as file:
-            fcntl.flock(file.fileno(), fcntl.LOCK_EX)
             pickle.dump(bank,file)
-            fcntl.flock(file.fileno(), fcntl.LOCK_UN)
 
     def save(self, filepath:str):
         Bank.bank_to_file(self, filepath, True)
