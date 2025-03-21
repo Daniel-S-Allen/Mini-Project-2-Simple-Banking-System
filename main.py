@@ -14,7 +14,7 @@ while True:
         if action == "create":
             # Get the account parameters
             id = input("Enter the ID: ")
-            balance = int(input("Enter the initial balance: "))
+            balance = float(input("Enter the initial balance: "))
             try:
                 current_account = bank.create_account(id,balance)
             except Exception as e:
@@ -41,7 +41,7 @@ while True:
             amount = input("Enter the amount to withdraw: ")
             description = input("Enter the description: ")
             try:
-                current_account.withdraw(amount=int(amount), description=description)
+                current_account.withdraw(amount=float(amount), description=description)
             except Exception as e:
                 print(e)
             
@@ -50,7 +50,7 @@ while True:
             amount = input("Enter the amount to deposit: ")
             description = input("Enter the description: ")
             try:
-                current_account.deposit(amount=int(amount), description=description)
+                current_account.deposit(amount=float(amount), description=description)
             except Exception as e:
                 print(e)
         
